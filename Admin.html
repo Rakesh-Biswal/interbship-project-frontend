@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product selling Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <style>
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+
+        }
+
+        .dot-spinner {
+            display: flex;
+            justify-content: space-between;
+            width: 50px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: dot-blink 1s infinite alternate;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dot-blink {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+
+        .success-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            text-align: center;
+            display: none;
+        }
+
+        .success-box h2 {
+            color: green;
+            margin-bottom: 20px;
+        }
+
+        .success-box .btn {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .success-box .btn.done-btn {
+            background-color: #f44336;
+        }
+
+        .success-box .btn:hover {
+            background-color: #45a049;
+        }
+
+
+        .blur-background {
+            filter: blur(5px);
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 16px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        #submit,
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5cb85c;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #submit:hover {
+            background-color: #4cae4c;
+        }
+
+        .submit-btn:hover {
+            background-color: #4cae4c;
+        }
+
+
+
+        .hidden {
+            display: none;
+        }
+
+        .container.active {
+            display: block;
+        }
+
+        .container {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            position: relative;
+            animation: fadeIn 0.5s;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Submit Product for Sale</h1>
+
+        <form id="product-form">
+
+            <label for="productDescription">Product Description:</label>
+            <textarea id="productDescription" name="productDescription" placeholder="Describe your product"
+                required></textarea>
+
+            <label for="price">Enter Your Price (INR):</label>
+            <input type="number" id="price" name="price" placeholder="Enter Price">
+
+
+            <label for="productPhoto">Product Photo:</label>
+            <input type="file" id="productPhoto" name="productPhoto" accept="image/*" required>
+
+            <button type="submit" id="submit" class="submit-btn">Submit</button>
+
+        </form>
+
+    </div>
+
+    <!-- Spinner Overlay -->
+    <div class="spinner-overlay" id="spinner-overlay">
+        <div class="dot-spinner">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <!-- Success Box -->
+    <div class="success-box" id="success-box">
+        <h2>You are Successfully Submitted the response🥳🥳😍</h2>
+        <button class="btn" id="view-order-btn">View Order</button>
+        <button class="btn done-btn" id="done-btn">Done</button>
+    </div>
+
+    <script>
+        const container = document.querySelector('.container');
+        let PRODUCT_ID;
+        document.getElementById('product-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+
+            document.getElementById('spinner-overlay').style.display = 'flex';
+
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('http://localhost:3000/api/products', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+
+                    document.getElementById('spinner-overlay').style.display = 'none';
+
+                    // Show Success Box
+                    document.getElementById('success-box').style.display = 'block';
+                    container.classList.add('blur-background');
+                    PRODUCT_ID = result.id;
+
+                } else {
+
+                    console.error('Error submitting product:', result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+
+        document.getElementById('done-btn').addEventListener('click', function () {
+            document.getElementById('success-box').style.display = 'none';
+            container.classList.remove('blur-background');
+            document.getElementById('product-form').reset(); // Reset form
+        });
+
+
+        document.getElementById('view-order-btn').addEventListener('click', function () {
+            window.location.href = `view.html`;
+        });
+    </script>
+
+
+
+</body>
+
+</html>
